@@ -116,16 +116,27 @@ function Card() {
     setCategory(task.category?.id || "");
   };
 
+ 
   //  Save Edited Task
-  const saveEdit = async () => {
-    if (!editingTask) return;
+const saveEdit = async () => {
+  if (!editingTask) return;
 
-    await fetch(`${API}/task/editTask/${editingTask.id}`, {
+  try {
+    // Step 1: Update task title
+    const res = await fetch(`${API}/task/editTask/${editingTask.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title: task }),
     });
 
+    if (!res.ok) {
+      console.error("Failed to update task");
+      return;
+    }
+
+    const updatedTask = await res.json();
+
+    // Step 2: Update category if selected
     if (category) {
       await fetch(`${API}/task/updateCatagory/${editingTask.id}`, {
         method: "PUT",
@@ -138,11 +149,28 @@ function Card() {
       });
     }
 
-    await getAllTasks();
+    // Step 3: Update UI instantly (without reload)
+    setTaskList((prev) =>
+      prev.map((t) =>
+        t.id === editingTask.id
+          ? { ...t, title: updatedTask.title }
+          : t
+      )
+    );
+
+    // Step 4: Reset fields
     setEditingTask(null);
     setTask("");
     setCategory("");
-  };
+
+    // Step 5: Optional backend refresh for safety
+    await getAllTasks();
+
+  } catch (error) {
+    console.error("Error saving edit:", error);
+  }
+};
+
 
   // 🟣 Dynamic Filter Effect
   useEffect(() => {
