@@ -168,7 +168,7 @@ const saveEdit = async () => {
     setCategory("");
 
     // Step 5: Optional backend refresh for safety
-    await getAllTasks();
+    // await getAllTasks();
 
   } catch (error) {
     console.error("Error saving edit:", error);
