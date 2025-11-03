@@ -17,7 +17,9 @@ function Card() {
   //  Fetch all tasks
   const getAllTasks = async () => {
     try {
-      const res = await fetch(`${API}/task/getTasks`);
+      const res = await fetch(`${API}/task/getTasks`,{
+        headers: { "Cache-Control": "no-cache" }
+      });
       const data = await res.json();
       // console.log("AllTask:", data);
       setTaskList(data);
@@ -29,7 +31,9 @@ function Card() {
   //  Fetch all categories
   const getAllCategories = async () => {
     try {
-      const res = await fetch(`${API}/category/getAll`);
+      const res = await fetch(`${API}/category/getAll`,{
+        headers: { "Cache-Control": "no-cache" }
+      });
       const data = await res.json();
       setCategories(data);
       // console.log("AllCategories", data);
