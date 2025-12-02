@@ -77,8 +77,6 @@ function Card() {
     if (!task) return alert("Please fill task!");
 
 
-    console.log("newCategory=" + newCategory)
-
     let payload = null
 
     if (!newCategory.trim()) {
