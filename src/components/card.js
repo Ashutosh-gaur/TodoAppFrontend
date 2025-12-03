@@ -149,6 +149,14 @@ function Card() {
     fetchTasks();
 
   }, []);
+  useEffect(() => {
+   setInterval(() => {
+  fetch('/ping')
+  console.log("/ping is hitting")
+},300000)  // 5 minutes
+
+
+  }, []);
   
 
 
