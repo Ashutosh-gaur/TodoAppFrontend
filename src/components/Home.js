@@ -21,7 +21,7 @@ const Home = () => {
       fetchTasks();
       // console.log("categories = ",categories)
     
-  }, []);
+  }, [taskList]);
 
   const fetchCategories = async () => {
     const response = await api.get('/category/getAll', {
