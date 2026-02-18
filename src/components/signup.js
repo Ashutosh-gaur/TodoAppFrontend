@@ -1,25 +1,47 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../interceptor/authinterceptor";
+import { toast } from "react-toastify";
 
 const Signup = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
+  const [formData,setFormData]=useState({username:"",email:"",password:""})
+
+
+  const handleChange=(e)=>{
+
+    setFormData({...formData,[e.target.name]:e.target.value})
+
+
+
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const name = e.target.name.value;
-    const email = e.target.email.value;
-    const password = e.target.password.value;
-
-    if (!name || !email || !password) {
+    if (!formData.username || !formData.email || !formData.password) {
       setError("All fields are required");
       return;
     }
 
+    const response =api.post("http://localhost:9008/user/register_user",formData,
+      {
+        headers:{
+          "Authorization": `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json"
+
+        }
+
+    })
+
+    console.log(response.data);
+
     setError("");
-    alert("Signup Successful");
+    toast.success("Signup successful! Please login.");
+  
     navigate("/login");
   };
 
@@ -37,15 +59,19 @@ const Signup = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
-            name="name"
+            name="username"
             type="text"
-            placeholder="Full Name"
+             value={formData.username}
+             onChange={handleChange}
+            placeholder="Username"
             className="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-400"
           />
 
           <input
             name="email"
             type="email"
+            value={formData.email}
+            onChange={handleChange}
             placeholder="Email"
             className="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-400"
           />
@@ -54,6 +80,8 @@ const Signup = () => {
             <input
               name="password"
               type={showPassword ? "text" : "password"}
+              value={formData.password}
+              onChange={handleChange}
               placeholder="Password"
               className="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-400"
             />
@@ -65,7 +93,9 @@ const Signup = () => {
             </span>
           </div>
 
-          <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
+          <button 
+          type="submit"
+          className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
             Sign Up
           </button>
         </form>

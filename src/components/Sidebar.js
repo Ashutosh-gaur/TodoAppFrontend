@@ -1,22 +1,54 @@
 import React, { useState } from 'react';
-import { FaBriefcase, FaUser, FaShoppingCart, FaExclamationTriangle, FaBars, FaTimes, FaSignOutAlt } from 'react-icons/fa';
+import { FaBars, FaTimes, FaSignOutAlt } from 'react-icons/fa';
 import { useNavigate, useLocation } from 'react-router-dom';
+import api from '../interceptor/authinterceptor';
+import { useEffect } from 'react';
 
-const Sidebar = ({ categories, taskList, onCategoryChange, onLogout }) => {
+
+const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-  const getCategoryIcon = (category) => {
-    switch (category.toLowerCase()) {
-      case 'Assignment': return <FaBriefcase />;
-      case 'personal': return <FaUser />;
-      case 'shopping': return <FaShoppingCart />;
-      case 'important': return <FaExclamationTriangle />;
-      default: return null;
-    }
-  };
+  const [categories, setCategories] = useState([]);
+  const [taskList, setTaskList] = useState([]);
+
+
+  // Fetch categories and tasks
+  const fetchCategories = async () => {
+    const response = await api.get('/category/getAll', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    // const data = await response.json();
+    setCategories(response.data);
   
+  };
+
+  const fetchTasks = async () => {
+    const response = await api.get(`/task/getTasks`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    setTaskList(response.data);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login');
+  };
+
+  useEffect(() => {
+
+    fetchCategories();
+    fetchTasks();
+
+  }, []);
+
 
   const getCategoryCount = (categoryId) => {
     if (categoryId === 'all') return taskList.length;
@@ -24,7 +56,7 @@ const Sidebar = ({ categories, taskList, onCategoryChange, onLogout }) => {
   };
 
   const handleCategoryClick = (categoryId) => {
-    onCategoryChange(categoryId);
+
     // Update URL params
     const params = new URLSearchParams(location.search);
     params.set('category', categoryId === 'all' ? 'all' : categoryId);
@@ -63,7 +95,7 @@ const Sidebar = ({ categories, taskList, onCategoryChange, onLogout }) => {
                 onClick={() => handleCategoryClick(cat.id)}
                 className={`w-full text-left p-3 hover:bg-gray-700 transition-colors flex items-center ${isActive(cat.id) ? 'bg-gray-700 border-l-4 border-indigo-500' : ''}`}
               >
-                <span className="mr-3">{isCollapsed ? getCategoryIcon(cat.name) : <>{getCategoryIcon(cat.name)} {cat.name}</>}</span>
+                <span className="mr-3"> {cat.name}</span>
                 {!isCollapsed && <span className="ml-auto bg-indigo-500 text-xs px-2 py-1 rounded-full">{getCategoryCount(cat.id)}</span>}
               </button>
             </li>
@@ -73,15 +105,15 @@ const Sidebar = ({ categories, taskList, onCategoryChange, onLogout }) => {
 
       <div className="absolute bottom-4 left-0 right-0 p-4">
         <button
-          onClick={onLogout}
+          onClick={handleLogout}
           className="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded flex items-center justify-center"
         >
-          {isCollapsed ? <FaSignOutAlt  /> : <>
-          <FaSignOutAlt className="mr-2" />
-          <p>
+          {isCollapsed ? <FaSignOutAlt /> : <>
+            <FaSignOutAlt className="mr-2" />
+            <p>
 
-           Logout
-          </p>
+              Logout
+            </p>
           </>}
         </button>
       </div>

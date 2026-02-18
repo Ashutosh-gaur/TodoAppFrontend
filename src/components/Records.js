@@ -51,7 +51,8 @@ function Records({ onCategoryChange }) {
   };
 
   // Add Task
-  const handleAddTask = async () => {
+  const handleAddTask = async (e) => {
+    e.preventDefault();
     if (!title) return toast.warning("Please fill task field!");
 
     const payload = {
@@ -71,6 +72,8 @@ function Records({ onCategoryChange }) {
     fetchTasks();
     fetchCategories();
     toast.success("Task created successfully");
+    window.location.reload()
+       
   };
 
   // Edit Task
@@ -103,6 +106,7 @@ function Records({ onCategoryChange }) {
     });
     fetchTasks();
     toast.success("Task deleted!");
+     window.location.reload()
   };
 
   // Toggle Complete

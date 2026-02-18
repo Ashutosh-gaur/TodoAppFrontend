@@ -1,68 +1,18 @@
 
-import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate, Link } from 'react-router-dom';
-import { FaUser, FaPlus } from 'react-icons/fa';
+import React from 'react';
+import { Routes, Route, Link } from 'react-router-dom';
+import { FaUser } from 'react-icons/fa';
 import Sidebar from './Sidebar';
 import Records from './Records';
 import Profile from './Profile';
-import api from '../interceptor/authinterceptor';
+
 
 const Home = () => {
-  const [categories, setCategories] = useState([]);
-  const [taskList, setTaskList] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const navigate = useNavigate();
-
-  // Fetch categories and tasks
-  useEffect(() => {
-
-
-      fetchCategories();
-      fetchTasks();
-      // console.log("categories = ",categories)
-    
-  }, [taskList]);
-
-  const fetchCategories = async () => {
-    const response = await api.get('/category/getAll', {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json'
-      }
-    });
-    // const data = await response.json();
-    setCategories(response.data);
-  };
-
-  const fetchTasks = async () => {
-    const response = await api.get(`/task/getTasks`, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json'
-      }
-    });
-    // const data = await response.json();
-    setTaskList(response.data);
-  };
-
-  const handleCategoryChange = (categoryId) => {
-    setSelectedCategory(categoryId);
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/login');
-  };
-
-
-
+  
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar
-        categories={categories}
-        taskList={taskList}
-        onCategoryChange={handleCategoryChange}
-        onLogout={handleLogout}
+       
       />
       <div className="flex-1 ml-0 md:ml-64">
         {/* Header with navigation */}
@@ -81,7 +31,7 @@ const Home = () => {
         </header>
  
         <Routes>
-          <Route path="/" element={<Records onCategoryChange={handleCategoryChange} />} />
+          <Route path="/" element={<Records  />} />
           <Route path="/profile" element={<Profile />} />
         </Routes> 
       </div>
