@@ -6,7 +6,7 @@ import Signup from "./components/signup";
 import Home from "./components/Home";
 import { ToastContainer } from 'react-toastify';
 import { BrowserRouter } from 'react-router-dom';
-import { useEffect } from 'react';
+
 
  import ProtectedRoute from './protected/ProtectedRoute.js';
 

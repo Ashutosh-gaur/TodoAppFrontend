@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { MdDeleteOutline, MdEdit, MdSearch } from "react-icons/md";
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 import { toast } from "react-toastify";
@@ -153,7 +153,7 @@ function Records({ onCategoryChange }) {
   };
 
   // Filter tasks based on category and search
-  const filterTasks = () => {
+  const filterTasks = useCallback(() => {
     let filtered = taskList;
 
     // Filter by category
@@ -170,7 +170,7 @@ function Records({ onCategoryChange }) {
 
     setFilteredTask(filtered);
     setCurrentPage(1); // Reset to first page when filtering
-  };
+  },[selectedCategory, searchTerm, taskList]);
 
 
   // Pagination
@@ -195,7 +195,7 @@ function Records({ onCategoryChange }) {
 
   useEffect(() => {
     filterTasks();
-  }, [taskList, selectedCategory, searchTerm]);
+  }, [filterTasks]);
 
   // Pie Chart Data
   const pieData = [
