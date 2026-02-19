@@ -72,7 +72,7 @@ function Records({ onCategoryChange }) {
     fetchTasks();
     fetchCategories();
     toast.success("Task created successfully");
-    window.location.reload()
+    // window.location.reload()
        
   };
 
@@ -106,7 +106,7 @@ function Records({ onCategoryChange }) {
     });
     fetchTasks();
     toast.success("Task deleted!");
-     window.location.reload()
+    
   };
 
   // Toggle Complete
