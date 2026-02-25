@@ -27,7 +27,7 @@ const Signup = () => {
       return;
     }
 
-    const response =api.post("http://localhost:9008/user/register_user",formData,
+    const response =api.post("/user/register_user",formData,
       {
         headers:{
           "Authorization": `Bearer ${localStorage.getItem("token")}`,
